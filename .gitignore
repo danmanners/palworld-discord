@@ -1,0 +1,13 @@
+# IDE Directories
+.vscode
+
+# Python Directories and Files
+.venv
+venv
+.env
+*.py[cod]
+
+# Pyinstaller Files
+dist
+build
+*.spec
