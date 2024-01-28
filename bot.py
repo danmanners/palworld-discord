@@ -31,6 +31,7 @@ TOKEN: str = os.environ.get("DISCORD_TOKEN")
 RCON_HOST: str = os.environ.get("RCON_HOST")
 RCON_PORT: int = os.environ.get("RCON_PORT")
 RCON_PASSWORD: str = os.environ.get("RCON_PASSWORD")
+RESTRICT_CHANNEL_ID = os.environ.get("RESTRICT_CHANNEL_ID") or None
 RESTART_TIMEOUT = os.environ.get("RESTART_TIMEOUT") or 60.0
 RESTART_TIMEOUT = float(RESTART_TIMEOUT)
 
@@ -52,8 +53,21 @@ intents.message_content = True
 bot = commands.Bot(command_prefix="!", intents=intents)
 
 
+# Ensure that the bot can only be used in the #palworld-bot-test channel
+def only_one_channel():
+    # If the RESTRICT_CHANNEL_ID is not set, don't restrict the bot to a single channel
+    # If the RESTRICT_CHANNEL_ID is set, restrict the bot to a single channel
+    def predicate(ctx):
+        if ctx.channel.id != int(RESTRICT_CHANNEL_ID):
+            raise commands.CheckFailure("You can't use that command in this channel!")
+        return True
+
+    return commands.check(predicate)
+
+
 # If a user sends the message "!memory" in the #palworld-bot-test channel,
 # the bot will react with a thinking emoji, run a command, then react with a checkmark emoji
+@only_one_channel()
 @bot.command(name="memory")
 async def memory(ctx):
     await ctx.message.add_reaction("🤔")
@@ -69,6 +83,7 @@ async def memory(ctx):
 
 # If a user sends the message "!save" in the #palworld-bot-test channel,
 # the bot will react with a thinking emoji, run a command, then react with a checkmark emoji
+@only_one_channel()
 @bot.command(name="save")
 async def save(ctx):
     await ctx.message.add_reaction("🤔")
@@ -86,6 +101,7 @@ async def save(ctx):
 
 # If a user sends the message "!upgrade" in the #palworld-bot-test channel,
 # the bot will react with a thinking emoji, run a command, then react with a checkmark emoji
+@only_one_channel()
 @bot.command(name="upgrade")
 async def upgrade(ctx):
     await ctx.message.add_reaction("🤔")
@@ -103,6 +119,7 @@ async def upgrade(ctx):
 
 # If a user sends the message "!restart" in the #palworld-bot-test channel,
 # the bot will react with a thinking emoji, run a command, then react with a checkmark emoji
+@only_one_channel()
 @bot.command(name="restart")
 async def restart(ctx):
     def restart_message(ctx):
@@ -150,6 +167,7 @@ async def restart(ctx):
 
 
 # If the user sends a command that is not recognized, the bot should do nothing and not error out
+@only_one_channel()
 @bot.event
 async def on_command_error(ctx, error):
     pass
