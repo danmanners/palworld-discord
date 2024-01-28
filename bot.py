@@ -109,7 +109,7 @@ async def upgrade(ctx):
     await ctx.send(
         "```\n"
         + subprocess.check_output(
-            "steamcmd +login anonymous +app_update 2394010 validate +quit", shell=True
+            "/usr/games/steamcmd +login anonymous +app_update 2394010 validate +quit", shell=True
         ).decode("utf-8")
         + "\n```"
     )
