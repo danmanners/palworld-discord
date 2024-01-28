@@ -29,6 +29,7 @@ jobs:
 
       - name: Create Release and Upload Artifact
         run: |
-          gh release create ${{ github.sha }} dist/bot --title "Release ${{ github.sha }}" --generate-notes
+          SHORT_SHA=$(echo "${{ github.sha }}" | cut -c34-40)
+          gh release create ${SHORT_SHA} dist/bot --title "Release ${SHORT_SHA}" --generate-notes
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
