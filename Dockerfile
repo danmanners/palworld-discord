@@ -1,4 +1,4 @@
-FROM docker.io/library/python:3.11-alpine3.19 as builder
+FROM docker.io/library/python:3.12-alpine3.19 as builder
 
 WORKDIR /opt
 COPY requirements.txt requirements.txt
